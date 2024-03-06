@@ -7,7 +7,6 @@ function App() {
     mode: "cors",
     credentials: "omit",
     headers: {
-
       "Content-Type": "application/json",
     }
   }
