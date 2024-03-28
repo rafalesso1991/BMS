@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 function App() {
-  const [users, setUsers] = useState([])    
+  const [users, setUsers] = useState([])
   const url = "http://localhost:8000/users/";
   const options = {
     method: "GET",

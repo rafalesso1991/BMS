@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 from datetime import datetime
 # Pydantic Request Schema
-class UserCreate(BaseModel):
-    name: str
+class UserRequest(BaseModel):
+    username: str
     email: str
-    password: str
+
 # Pydantic Response Schema
-class UserResponse(UserCreate):
+class UserResponse(UserRequest):
     id: int
     created_at: datetime
+    logged_in: bool = False

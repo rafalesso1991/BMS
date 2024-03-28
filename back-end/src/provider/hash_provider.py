@@ -1,9 +1,9 @@
 from passlib.context import CryptContext
 
-password_context = CryptContext(schemes=['bcrypt'])
+password_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
-def generate_hash(text):
-	return password_context.hash(text)
+def generate_hash(plain_password):
+	return password_context.hash(plain_password)
 
-def verify_hash(text, hash):
-	return password_context.verify(text, hash)
+def verify_hash(plain_password, hashed_password):
+	return password_context.verify(plain_password, hash)

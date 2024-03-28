@@ -6,7 +6,7 @@ class BookModel(Base):
     __tablename__ = 'books'
 
     id = Column(Integer, Sequence('book_id_seq'), primary_key=True)
-    name = Column(String(50))
-    description = Column(String(100))
+    title = Column(String(255))
+    description = Column(String(255))
     owner_id = Column(Integer)
     created_at = Column(DateTime, default=datetime.utcnow)
