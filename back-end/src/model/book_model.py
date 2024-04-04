@@ -1,12 +1,20 @@
 from config.db import Base
-from sqlalchemy import Column, Integer, Sequence, String, DateTime
+from sqlalchemy import Column, Integer, Sequence, DateTime
 from datetime import datetime
-# Book Model
-class BookModel(Base):
-    __tablename__ = 'books'
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import relationship
 
-    id = Column(Integer, Sequence('book_id_seq'), primary_key=True)
-    title = Column(String(255))
-    description = Column(String(255))
-    owner_id = Column(Integer)
+
+""" # Book Model
+class BookModel(Base): #FALTA HEREDAR
+    __tablename__ = 'books'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title_id = Column(Integer, ForeignKey('titles.id'), nullable=False)   
+    owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)#
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow)
+ """

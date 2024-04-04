@@ -4,9 +4,11 @@ from datetime import datetime
 class UserRequest(BaseModel):
     username: str
     email: str
-
 # Pydantic Response Schema
 class UserResponse(UserRequest):
     id: int
+    admin: bool = False
     created_at: datetime
-    logged_in: bool = False
+    updated_at: datetime
+    last_login: datetime
+    

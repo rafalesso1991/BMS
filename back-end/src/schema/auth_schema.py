@@ -10,4 +10,5 @@ class AuthResponse(AuthRequest):
     access_token: str
     token_type: str
     created_at: datetime
+    updated_at: datetime
     logged_in: bool = False
