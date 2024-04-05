@@ -10,5 +10,4 @@ class UserResponse(UserRequest):
     admin: bool = False
     created_at: datetime
     updated_at: datetime
-    last_login: datetime
-    
+    logged_in: bool = False

@@ -6,7 +6,5 @@ class BookRequest(BaseModel):
     owner_id: int
 # Pydantic Response Schema
 class BookResponse(BookRequest):
-    id: int
     created_at: datetime
     updated_at: datetime
-    

@@ -1,10 +1,10 @@
 from config.db import Base
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import Column, Integer, Sequence, String, DateTime
 from datetime import datetime
 # Title Model
 class TitleModel(Base):
     __tablename__ = 'titles'
-
     id = Column(Integer, Sequence('title_id_seq'), primary_key=True)# 1
     name = Column(String(255))# 2
     author = Column(String(255))# 3

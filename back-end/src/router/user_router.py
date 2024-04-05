@@ -19,7 +19,7 @@ async def get_users(db=Depends(get_db)):
     return db_users
 
 # Create User
-@user_router.post("/{user_id}", status_code=201, response_model=UserResponse)
+@user_router.post("/signup", status_code=201, response_model=UserResponse)
 async def create_user(new_user: UserRequest, password: str, db: sessionmaker = Depends(get_db)):
     hashed_pass = generate_hash(password)
     db_user = UserModel(username=new_user.username, email=new_user.email, hashed_password=hashed_pass)
@@ -43,8 +43,7 @@ async def update_user(user_id: int, updated_user: UserRequest, db=Depends(get_db
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     db_user.username = updated_user.username
-    db_user.desc = updated_user.description
-    db_user.ownner_id = updated_user.owner_id
+    db_user.email = updated_user.email
     db.commit()
     db.refresh(db_user)
     return db_user

@@ -39,8 +39,7 @@ async def update_book(book_id: int, updated_book: BookRequest, db=Depends(get_db
     db_book = db.query(BookModel).filter(BookModel.id == book_id).first()
     if not db_book:
         raise HTTPException(status_code=404, detail="Book not found")
-    db_book.title = updated_book.title
-    db_book.desc = updated_book.description
+    db_book.title_id = updated_book.title_id
     db_book.ownner_id = updated_book.owner_id
     db.commit()
     db.refresh(db_book)
