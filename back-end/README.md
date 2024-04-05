@@ -1,4 +1,30 @@
-Requirements
+# Book Management System
+
+## Description
+
+
+## How to use
+ 
+We first need to run the backend.
+
+for this we use docker-compose and poetry.
+
+```bash
+docker-compose up -d
+poetry run python3 src/main.py
+```
+
+### Testing
+For testing its best to first destroy 
+```bash
+docker-compose down --volumes
+docker-compose up
+poetry run python -m pytest tests/
+```
+
+Now
+
+# Project Requirements
 1. PostgreSQL DDBB
 • Create tables: "Users" one-to-many "Books" relationship
 • "users" table: "id", "username", "email" and "password" (hashed)

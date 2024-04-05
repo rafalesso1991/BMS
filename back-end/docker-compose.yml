@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:15.0-alpine
+    volumes:
+    - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5435:5432
+    expose:
+      - 5435
+    environment:
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - PGDATABASE=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=books
+
+volumes:
+      postgres_data: 
+

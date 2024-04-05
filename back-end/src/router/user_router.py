@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from config.db import get_db
 from model.user_model import UserModel
-from schema.user_schema import UserRequest, UserResponse
+from schema.user_schema import UserRequest, UserResponse, UserCreate
 from router.auth_router import generate_hash
 from sqlalchemy.orm import sessionmaker
 
@@ -19,14 +19,19 @@ async def get_users(db=Depends(get_db)):
     return db_users
 
 # Create User
-@user_router.post("/{user_id}", status_code=201, response_model=UserResponse)
-async def create_user(new_user: UserRequest, password: str, db: sessionmaker = Depends(get_db)):
-    hashed_pass = generate_hash(password)
+@user_router.post("/signup", status_code=201, response_model=UserResponse)
+async def create_user(new_user: UserCreate, db: sessionmaker = Depends(get_db)):
+    hashed_pass = generate_hash(new_user.password)
     db_user = UserModel(username=new_user.username, email=new_user.email, hashed_password=hashed_pass)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return db_user
+   
+    return UserResponse(id=db_user.id, 
+                         username=db_user.username, 
+                         email=db_user.email,
+                         updated_at=db_user.updated_at,
+                         created_at=db_user.created_at)
 
 # Get User
 @user_router.get("/{user_id}", status_code=201, response_model=UserResponse)

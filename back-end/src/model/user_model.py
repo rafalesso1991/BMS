@@ -11,4 +11,3 @@ class UserModel(Base):
     hashed_password = Column(String(255))# 4
     created_at = Column(DateTime, default=datetime.utcnow)# 6
     updated_at = Column(DateTime, default=datetime.utcnow)# 7
-    logged_in = Column(Boolean, default=False)# 8
