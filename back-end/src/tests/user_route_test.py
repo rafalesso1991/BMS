@@ -20,4 +20,3 @@ def test_create_user():
     response = client.get(f"/users/{user_id}")
     
     assert response.status_code == 201
-    

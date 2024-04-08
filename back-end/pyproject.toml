@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "BMS-back"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "Back-end for Book Management System using fastapi as framework and postgresql as database"
+authors = ["Rafael Alesso <rafalesso1991@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
