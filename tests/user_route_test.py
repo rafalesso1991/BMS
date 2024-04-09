@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from pydantic import BaseModel
 
-from ..main import app
+from bms.main import app
 
 client = TestClient(app)
 
