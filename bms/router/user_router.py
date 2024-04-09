@@ -11,6 +11,19 @@ user_router = APIRouter(
     tags=["Users"]
 )
 
+def user_not_found():
+    raise HTTPException(status_code=404, detail="User not found")
+
+def username_is_taken(username: str, db: sessionmaker = Depends(get_db)):
+    # Query the database for the username
+    repeat_user = db.query(UserModel).filter(UserModel.username == username).first()
+    return repeat_user is not None
+
+def email_is_taken(username: str, db: sessionmaker = Depends(get_db)):
+    # Query the database for the username
+    repeat_email = db.query(UserModel).filter(UserModel.email == username).first()
+    return repeat_email is not None
+
 # Get All Users
 @user_router.get("/")
 async def get_users(db=Depends(get_db)):
@@ -21,6 +34,10 @@ async def get_users(db=Depends(get_db)):
 @user_router.post("/signup", status_code=201, response_model=UserResponse)
 async def create_user(new_user: UserCreate,
                       db: sessionmaker = Depends(get_db)):
+    if username_is_taken(new_user.username, db):
+        raise HTTPException(status_code=409, detail="A user with that name already exists")
+    if email_is_taken(new_user.email, db):
+        raise HTTPException(status_code=409, detail="A user with that email already exists")
     hashed_pass = generate_hash(new_user.password)
     db_user = UserModel(username=new_user.username,
                         email=new_user.email,
@@ -39,8 +56,8 @@ async def create_user(new_user: UserCreate,
 @user_router.get("/{user_id}", status_code=201, response_model=UserResponse)
 async def get_user(user_id: int, db: sessionmaker = Depends(get_db)):
     db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
-    if not db_user:
-        raise HTTPException(status_code=404, detail="User not found")
+    if not db_user: 
+        user_not_found()
 
     return db_user
 
@@ -49,7 +66,7 @@ async def get_user(user_id: int, db: sessionmaker = Depends(get_db)):
 async def update_user(user_id: int, updated_user: UserRequest, db: sessionmaker =Depends(get_db)):
     db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
     if not db_user:
-        raise HTTPException(status_code=404, detail="User not found")
+        user_not_found()
     db_user.username = updated_user.username
     db_user.email = updated_user.email
     db.commit()
@@ -62,7 +79,7 @@ async def update_user(user_id: int, updated_user: UserRequest, db: sessionmaker 
 async def delete_user(user_id: int, db: sessionmaker =Depends(get_db)):
     db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
     if not db_user:
-        raise HTTPException(status_code=404, detail="User not found")
+        user_not_found()
     db.delete(db_user)
     db.commit()
 
