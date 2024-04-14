@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from config.db import get_db
+from model.book_model import BookModel
+from model.title_model import TitleModel
 from model.user_model import UserModel
+from schema.title_schema import TitleResponse
 from schema.user_schema import UserRequest, UserResponse, UserCreate
 from router.auth_router import generate_hash
 from sqlalchemy.orm import sessionmaker
@@ -60,6 +63,14 @@ async def get_user(user_id: int, db: sessionmaker = Depends(get_db)):
         user_not_found()
 
     return db_user
+
+# GET BOOKS by USER
+@user_router.get("/{user_id}", status_code=200, response_model=TitleResponse)
+async def get_titles_by_user(user_id: int, db: sessionmaker = Depends(get_db)):
+    user_titles = db.query(TitleModel).join(BookModel).filter(BookModel.owner_id == user_id).all()
+    print(type(user_titles))
+    for user_title in user_titles:
+        return user_title
 
 # Update User
 @user_router.put("/{user_id}", status_code=201, response_model=UserResponse)
