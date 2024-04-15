@@ -1,46 +1,36 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import sessionmaker
 from config.db import get_db
-from model.book_model import BookModel
-from model.title_model import TitleModel
 from model.user_model import UserModel
-from schema.title_schema import TitleResponse
 from schema.user_schema import UserRequest, UserResponse, UserCreate
 from router.auth_router import generate_hash
-from sqlalchemy.orm import sessionmaker
+from queries.user_queries import get_all_users, get_user, user_not_found, username_is_taken, email_is_taken
+from queries.title_queries import get_user_titles
 
 # Users Router
-user_router = APIRouter(
-    prefix="/users",
-    tags=["Users"]
-)
+user_router = APIRouter(prefix="/users", tags=["Users"])
 
-def user_not_found():
-    raise HTTPException(status_code=404, detail="User not found")
+# DB Session
+session: sessionmaker = Depends(get_db)
 
-def username_is_taken(username: str, db: sessionmaker = Depends(get_db)):
-    # Query the database for the username
-    repeat_user = db.query(UserModel).filter(UserModel.username == username).first()
-    return repeat_user is not None
+# GET ALL USERS Router
+@user_router.get("/", status_code=200)
+async def get_users(db = session):
+    db_users = get_all_users(db)
 
-def email_is_taken(username: str, db: sessionmaker = Depends(get_db)):
-    # Query the database for the username
-    repeat_email = db.query(UserModel).filter(UserModel.email == username).first()
-    return repeat_email is not None
-
-# Get All Users
-@user_router.get("/")
-async def get_users(db=Depends(get_db)):
-    db_users = db.query(UserModel).all()
     return db_users
 
-# Create User
+# GET BOOK TITLES by USER
+@user_router.get("/{user_id}", status_code=200)
+async def get_titles_by_user(user_id: int, db = session):
+    user_titles = get_user_titles(user_id, db)
+    return user_titles
+
+# CREATE NEW USER Router
 @user_router.post("/signup", status_code=201, response_model=UserResponse)
-async def create_user(new_user: UserCreate,
-                      db: sessionmaker = Depends(get_db)):
-    if username_is_taken(new_user.username, db):
-        raise HTTPException(status_code=409, detail="A user with that name already exists")
-    if email_is_taken(new_user.email, db):
-        raise HTTPException(status_code=409, detail="A user with that email already exists")
+async def create_user(new_user: UserCreate, db = session):
+    username_is_taken(new_user.username, db)
+    email_is_taken(new_user.email, db)
     hashed_pass = generate_hash(new_user.password)
     db_user = UserModel(username=new_user.username,
                         email=new_user.email,
@@ -55,27 +45,10 @@ async def create_user(new_user: UserCreate,
                         created_at=db_user.created_at,
                         updated_at=db_user.updated_at)
 
-# Get User
-@user_router.get("/{user_id}", status_code=201, response_model=UserResponse)
-async def get_user(user_id: int, db: sessionmaker = Depends(get_db)):
-    db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
-    if not db_user: 
-        user_not_found()
-
-    return db_user
-
-# GET BOOKS by USER
-@user_router.get("/{user_id}", status_code=200, response_model=TitleResponse)
-async def get_titles_by_user(user_id: int, db: sessionmaker = Depends(get_db)):
-    user_titles = db.query(TitleModel).join(BookModel).filter(BookModel.owner_id == user_id).all()
-    print(type(user_titles))
-    for user_title in user_titles:
-        return user_title
-
-# Update User
-@user_router.put("/{user_id}", status_code=201, response_model=UserResponse)
-async def update_user(user_id: int, updated_user: UserRequest, db: sessionmaker =Depends(get_db)):
-    db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
+# UPDATE USER Route
+@user_router.put("/update/{user_id}", status_code=200, response_model=UserResponse)
+async def update_user(user_id: int, updated_user: UserRequest, db = session):
+    db_user = get_user(user_id, db)
     if not db_user:
         user_not_found()
     db_user.username = updated_user.username
@@ -85,10 +58,10 @@ async def update_user(user_id: int, updated_user: UserRequest, db: sessionmaker 
 
     return db_user
 
-# Delete User
-@user_router.delete("/{user_id}", status_code=201)
-async def delete_user(user_id: int, db: sessionmaker =Depends(get_db)):
-    db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
+# DELETE USER Route
+@user_router.delete("/delete/{user_id}", status_code=200)
+async def delete_user(user_id: int, db = session):
+    db_user = get_user(user_id, db)
     if not db_user:
         user_not_found()
     db.delete(db_user)

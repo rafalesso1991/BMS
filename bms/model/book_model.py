@@ -7,7 +7,6 @@ class BookModel(Base):
 
     title_id = Column(Integer, ForeignKey('titles.id'), primary_key=True)
     owner_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-    # quantity = Column(Interger)
+    #quantity = Column(Interger)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow)
- 

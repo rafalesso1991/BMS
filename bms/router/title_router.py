@@ -1,26 +1,40 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import sessionmaker
 from config.db import get_db
 from model.title_model import TitleModel
+from queries.title_queries import get_all_titles, get_title, get_user_titles, title_not_found
 from schema.title_schema import TitleRequest, TitleResponse
 from sqlalchemy.orm import Session
 
-# Title Router
-title_router = APIRouter(
-    prefix="/titles",
-    tags=["Titles"]
-)
+# TITLE Router
+title_router = APIRouter(prefix="/titles", tags=["Titles"])
 
-# Get All Titles
-@title_router.get("/")
-async def get_titles(db=Depends(get_db)):
-    db_titles = db.query(TitleModel).all()
+# DB Session
+session: sessionmaker = Depends(get_db)
+
+# GET ALL TITLES Route
+@title_router.get("/", status_code=200)
+async def get_titles(db = session):
+    db_titles = get_all_titles(db)
 
     return db_titles
 
-# Create Title
-@title_router.post("/{title_id}", status_code=201, response_model=TitleResponse)
-async def create_title(new_title: TitleRequest,
-                       db: Session = Depends(get_db)):
+# GET TITLE by ID
+@title_router.get("/{title_id}", status_code=200)
+async def get_title_by_id(title_id: int, db = session):
+    db_title = get_title(title_id, db)
+
+    return db_title
+
+# GET BOOK TITLES by USER
+@title_router.get("/{user_id}", status_code=200)
+async def get_titles_by_user(user_id: int, db = session):
+    user_titles = get_user_titles(user_id, db)
+    return user_titles
+
+# CREATE TITLE Route
+@title_router.post("/new_title/{title_id}", status_code=201, response_model=TitleResponse)
+async def create_title(new_title: TitleRequest, db = session):
     db_title = TitleModel(**new_title.dict())
     db.add(db_title)
     db.commit()
@@ -28,22 +42,12 @@ async def create_title(new_title: TitleRequest,
 
     return db_title
 
-# Get Title
-@title_router.get("/{title_id}", status_code=201, response_model=TitleResponse)
-async def get_title(title_id: int,
-                    db: Session = Depends(get_db)):
+# UPDATE TITLE Route
+@title_router.put("/update/{title_id}", response_model=TitleResponse)
+async def update_title(title_id: int, updated_title: TitleRequest, db = session):
     db_title = db.query(TitleModel).filter(TitleModel.id == title_id).first()
     if not db_title:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return db_title
-
-# Update Title
-@title_router.put("/{title_id}", response_model=TitleResponse)
-async def update_title(title_id: int, updated_title: TitleRequest, db=Depends(get_db)):
-    db_title = db.query(TitleModel).filter(TitleModel.id == title_id).first()
-    if not db_title:
-        raise HTTPException(status_code=404, detail="Title not found")
+        title_not_found()
     db_title.name = updated_title.name
     db_title.author = updated_title.author
     db_title.genre = updated_title.genre
@@ -53,9 +57,9 @@ async def update_title(title_id: int, updated_title: TitleRequest, db=Depends(ge
 
     return db_title
 
-# Delete Title
-@title_router.delete("/{title_id}")
-async def delete_title(title_id: int, db=Depends(get_db)):
+# DELETE TITLE
+@title_router.delete("/delete/{title_id}")
+async def delete_title(title_id: int, db = session):
     db_title = db.query(TitleModel).filter(TitleModel.id == title_id).first()
     if not db_title:
         raise HTTPException(status_code=404, detail="Title not found")

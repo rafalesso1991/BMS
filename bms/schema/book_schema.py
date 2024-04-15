@@ -10,4 +10,4 @@ class BookRequest(BaseModel):
 class BookResponse(BookRequest):
     created_at: datetime
     updated_at: datetime
-    quantity: int
+    #quantity: int

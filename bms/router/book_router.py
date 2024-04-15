@@ -1,47 +1,53 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import sessionmaker
 from config.db import get_db
 from model.book_model import BookModel
+from queries.book_queries import get_all_books, get_title_books, get_user_books#, book_not_found
 from schema.book_schema import BookRequest, BookResponse
-from sqlalchemy.orm import Session
 
-# Books Router
-book_router = APIRouter(
-    prefix="/books",
-    tags=["Books"]
-)
+# BOOK Router
+book_router = APIRouter(prefix="/books", tags=["Books"] )
 
-# Get All Books
-@book_router.get("/")
-async def get_books(db=Depends(get_db)):
-    db_books = db.query(BookModel).all()
+# DB Session
+session: sessionmaker = Depends(get_db)
+
+# GET ALL BOOKS Route
+@book_router.get("/", status_code=200)
+async def get_books(db = session):
+    db_books = get_all_books(db)
 
     return db_books
 
-# Create Book
-@book_router.post("/{book_id}", status_code=201, response_model=BookResponse)
-async def create_book(new_book: BookRequest, db: Session = Depends(get_db)):
+# GET BOOK BOOKS by TITLE Route
+@book_router.get("/{title_id}", status_code=200)
+async def get_books_by_title(title_id: int, db = session):
+    title_books = get_title_books(title_id, db)
+    
+    return title_books
+
+# GET BOOK BOOKS by USER Route
+@book_router.get("/{user_id}", status_code=200)
+async def get_books_by_user(user_id: int, db = session):
+    user_books = get_user_books(user_id, db)
+
+    return user_books
+
+# CREATE NEW BOOK Route
+@book_router.post("/new_book", status_code=201, response_model=BookResponse)
+async def create_book(new_book: BookRequest, db = session):
     db_book = BookModel(**new_book.dict())
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
 
     return db_book
-
-# Get Book
-@book_router.get("/{book_id}", status_code=201, response_model=BookResponse)
-async def get_book(book_id: int, db: Session = Depends(get_db)):
+"""
+# UPDATE BOOK Router
+@book_router.put("/update/{title_id}/{user_id}", response_model=BookResponse)
+async def update_book(title_id: int, user_id: int, updated_book: BookRequest, db=Depends(get_db)):
     db_book = db.query(BookModel).filter(BookModel.id == book_id).first()
     if not db_book:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return db_book
-
-# Update Book
-@book_router.put("/{book_id}", response_model=BookResponse)
-async def update_book(book_id: int, updated_book: BookRequest, db=Depends(get_db)):
-    db_book = db.query(BookModel).filter(BookModel.id == book_id).first()
-    if not db_book:
-        raise HTTPException(status_code=404, detail="Book not found")
+        book_not_found()
     db_book.title_id = updated_book.title_id
     db_book.ownner_id = updated_book.owner_id
     db.commit()
@@ -49,13 +55,14 @@ async def update_book(book_id: int, updated_book: BookRequest, db=Depends(get_db
 
     return db_book
 
-# Delete Book
-@book_router.delete("/{book_id}")
+# DELETE BOOK Router
+@book_router.delete("/delete/{book_id}")
 async def delete_book(book_id: int, db=Depends(get_db)):
     db_book = db.query(BookModel).filter(BookModel.id == book_id).first()
     if not db_book:
-        raise HTTPException(status_code=404, detail="Book not found")
+        book_not_found
     db.delete(db_book)
     db.commit()
 
     return {"message": "Book deleted successfully"}
+"""

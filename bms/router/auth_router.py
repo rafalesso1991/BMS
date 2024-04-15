@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from datetime import timedelta
 from auth.hash import ALGORITHM, generate_hash, verify_hashed_password
 from auth.token import create_token
-from queries.users import obtain_user
+from queries.user_queries import obtain_user
 
 # AUTORIZATHION ROUTER
 auth_router = APIRouter(
