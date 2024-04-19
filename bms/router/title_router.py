@@ -2,9 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import sessionmaker
 from config.db import get_db
 from model.title_model import TitleModel
-from queries.title_queries import get_all_titles, get_title, get_user_titles, title_not_found
+from queries.title_queries import get_all_titles, get_title, get_name_titles, get_author_titles, get_genre_titles, get_year_titles, get_user_titles, title_not_found
 from schema.title_schema import TitleRequest, TitleResponse
-from sqlalchemy.orm import Session
 
 # TITLE Router
 title_router = APIRouter(prefix="/titles", tags=["Titles"])
@@ -19,17 +18,46 @@ async def get_titles(db = session):
 
     return db_titles
 
-# GET TITLE by ID
+# GET TITLE by ID Route
 @title_router.get("/{title_id}", status_code=200)
 async def get_title_by_id(title_id: int, db = session):
     db_title = get_title(title_id, db)
 
     return db_title
 
-# GET BOOK TITLES by USER
-@title_router.get("/{user_id}", status_code=200)
+# GET TITLE by NAME Route
+@title_router.get("/by_name/{title_name}", status_code=200)
+async def get_title_by_name(title_name: str, db = session):
+    db_title = get_name_titles(title_name, db)
+
+    return db_title
+
+# GET TITLE by AUTHOR Route
+@title_router.get("/by_author/{title_author}", status_code=200)
+async def get_title_by_author(title_author: str, db = session):
+    db_title = get_author_titles(title_author, db)
+
+    return db_title
+
+# GET TITLE by GENRE Route
+@title_router.get("/by_genre/{title_genre}", status_code=200)
+async def get_titles_by_genre(title_genre: str, db = session):
+    genre_titles = get_genre_titles(title_genre, db)
+
+    return genre_titles
+
+# GET TITLE by YEAR Route
+@title_router.get("/by_year/{title_year}", status_code=200)
+async def get_title_by_year(title_year: int, db = session):
+    year_title = get_year_titles(title_year, db)
+
+    return year_title
+
+# GET TITLE by USER Route
+@title_router.get("/by_user/{user_id}", status_code=200)
 async def get_titles_by_user(user_id: int, db = session):
     user_titles = get_user_titles(user_id, db)
+
     return user_titles
 
 # CREATE TITLE Route

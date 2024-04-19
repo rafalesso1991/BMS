@@ -38,9 +38,11 @@ const StockMarketData = () => {
 
   // Display fetched JSON data here (replace with your desired formatting)
   return (
-    <div>
-      <h2>Jerry</h2>
-      <pre>{JSON.stringify(stockData, null, 2)}</pre>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+      <div>
+        <h2>Jerry</h2>
+        <pre>{JSON.stringify(stockData, null, 2)}</pre>
+      </div>
     </div>
   );
 };
