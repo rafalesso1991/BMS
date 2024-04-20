@@ -1,8 +1,10 @@
 import React from "react";
 import { AppBar, Toolbar, Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import LoginButton from "../components/LoginButton";
 
 const RouterLayout = () => {
+
     return (
       <div>
         <AppBar>
@@ -16,6 +18,8 @@ const RouterLayout = () => {
             <Button component={Link} to="/titles/by_genre" color="inherit">By Genre</Button>
             <Button component={Link} to="/titles/by_year" color="inherit">By Year</Button>
             <Button component={Link} to="/stock" color="inherit">Stock</Button>
+            <LoginButton />
+            
           </Toolbar>
         </AppBar>
 
