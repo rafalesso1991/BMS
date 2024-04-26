@@ -1,6 +1,5 @@
 from config.db import Base
 from sqlalchemy import Column, Integer, Sequence, String, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 
 # Title Model

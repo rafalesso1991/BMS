@@ -1,10 +1,10 @@
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 from typing import Union
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from .hash import ALGORITHM
 #
-oauth2_scheme = OAuth2PasswordBearer("/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token") # El único parámetro es la ruta del formulario en dnde se van a enviar los datos solicitados
 # TOKEN PARAMS 
 SECRET_KEY = "secret"
 #

@@ -5,7 +5,16 @@ from model.user_model import UserModel
 def obtain_user(db, username: str):
     db_user = db.query(UserModel).filter(UserModel.username == username).first()
     return db_user
-
+"""
+# Traer al usuario de la base d datos
+def get_user(username: str, db = session):
+    print(username, db)
+    db_user = db.query(UserModel).filter(UserModel.username == username).first()
+    if db_user:
+        user_dict = db[username]
+        return UserCreate(**user_dict) # se nos devuelve un objeto UserRequest q va a ser rellenado con los datos d user_dict
+    return []
+"""
 # GET ALL USERS
 def get_all_users(db):
     db_users = db.query(UserModel).all()

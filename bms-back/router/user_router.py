@@ -3,9 +3,11 @@ from sqlalchemy.orm import sessionmaker
 from config.db import get_db
 from model.user_model import UserModel
 from schema.user_schema import UserRequest, UserResponse, UserCreate
-from router.auth_router import generate_hash
+from auth.hash import generate_hash
 from queries.user_queries import get_all_users, get_user, user_not_found, username_is_taken, email_is_taken
 from queries.title_queries import get_user_titles
+from typing import Annotated
+from .auth_router import get_current_active_user
 
 # Users Router
 user_router = APIRouter(prefix="/users", tags=["Users"])
@@ -19,6 +21,13 @@ async def get_users(db = session):
     db_users = get_all_users(db)
 
     return db_users
+#######################################################################
+# GET TITLE by ID Route
+@user_router.get("/{username}", status_code=200)
+async def get_username(username: str, db = session):
+    db_user = get_user(username, db)
+
+    return db_user
 
 # GET BOOK TITLES by USER
 @user_router.get("/{user_id}", status_code=200)

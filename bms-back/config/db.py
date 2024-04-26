@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
 
 # Create DB in memory
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost:5435/books"#"DMS://user:pass@URL:port/db"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost:5435/books"
 
 # Create DB Engine
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
