@@ -36,7 +36,3 @@ def get_year_titles(year_id: int, db):
 def get_user_titles(user_id: int, db):
     user_titles = db.query(TitleModel).join(BookModel).filter(BookModel.owner_id == user_id).all()
     return user_titles
-
-# HTTP EXCEPTION "TITLE NOT FOUND"
-def title_not_found():
-    raise HTTPException(status_code=404, detail="Title not found")

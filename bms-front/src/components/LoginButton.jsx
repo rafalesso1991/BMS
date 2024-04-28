@@ -19,7 +19,7 @@ const LoginButton = () => {
   const handleLogin = async () => {
     setError(null); // Clear error before attempting login
     try {
-      const response = await axios.post('http://localhost:8000/auth/login', { username, password });
+      const response = await axios.post('http://localhost:8000/auth/token', { username, password });
       if (response.data.success) {
         login(response.data.user);
         handleClose();
