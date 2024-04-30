@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useContext} from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
@@ -10,9 +10,14 @@ const UsersData = () => {
   const fetchData = async () => {
     setIsLoading(true);
     setError(null);
-
+    let token = localStorage.getItem('myToken');
+    console.log("QUE ES ESTO:" + token)
     try {
-      const response = await axios.get('http://localhost:8000/users/'); // Replace with your API endpoint and key 
+      const response = await axios({
+        method: 'GET',
+        url: 'http://localhost:8000/users/',
+        headers: {'Authorization': 'Bearer ' + token},
+        }); // Replace with your API endpoint and key 
       setUsersData(response.data);
     } catch (err) {
       setError(err);

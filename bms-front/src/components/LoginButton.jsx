@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
 
 const LoginButton = () => {
   const { isAuthenticated, login } = useContext(AuthContext);
@@ -19,16 +18,10 @@ const LoginButton = () => {
   const handleLogin = async () => {
     setError(null); // Clear error before attempting login
     try {
-      const response = await axios.post('http://localhost:8000/auth/token', { username, password });
-      if (response.data.success) {
-        login(response.data.user);
-        handleClose();
-      } else {
-        setError(response.data.message);
-      }
+      login(username, password)
     } catch (error) {
       console.error('Login error:', error);
-      setError('An unexpected error occurred.');
+      setError('ACA SE CORRE EL ERROR');
     }
   };
 

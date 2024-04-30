@@ -15,7 +15,8 @@ create_tables()
 app = FastAPI(
         title="BMS - Book Managment System",
         description="Alumno: Rafael Alesso - 2024",
-        version="1.0.0"
+        version="1.0.0",
+        debug=True
 )
 origins = [
     "http://localhost:3000"

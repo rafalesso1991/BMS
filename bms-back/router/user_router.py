@@ -1,13 +1,16 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import sessionmaker
-from typing import Annotated
 from config.db import get_db
-from schema.user_schema import UserCreate, UserResponse, UserRequest
-from auth.token import get_current_active_user
-from queries.user_queries import get_all_users, get_user
-from handler.user_handler import username_is_taken, email_is_taken, user_not_found
-from auth.hash import generate_hash
 from model.user_model import UserModel
+from schema.user_schema import UserRequest, UserResponse, UserCreate
+from auth.hash import generate_hash
+from queries.user_queries import get_all_users, get_user, user_not_found, username_is_taken, email_is_taken
+from queries.title_queries import get_user_titles
+from typing import Annotated, List
+from .auth_router import get_current_active_user
+from auth.token import check_token
+from handler.credentials import credentials_exception
+
 
 # Users Router
 user_router = APIRouter(prefix="/users", tags=["Users"])
@@ -15,19 +18,29 @@ user_router = APIRouter(prefix="/users", tags=["Users"])
 # DB Session
 session: sessionmaker = Depends(get_db)
 
+def get_all_users_secured(db_users: Annotated[List[UserCreate], Depends(check_token)],db):
+    
+    return [] 
+
 # GET ALL USERS Router
 @user_router.get("/", status_code=200)
-async def get_users(user: Annotated[UserCreate, Depends(get_current_active_user)], db = session):
-    db_users = get_all_users(db)
-
+async def get_users(token: Annotated[str, Depends(check_token)], db = session):
+    db_users = db.query(UserModel).all()
     return db_users
 
-# GET USER Router
-@user_router.get("/{user_id}", status_code=200)
-async def get_username(user_id: int, user: Annotated[UserCreate, Depends(get_current_active_user)], db = session):
-    db_user = get_user(user_id, db)
+#######################################################################
+# GET TITLE by ID Route
+@user_router.get("/{username}", status_code=200)
+async def get_username(username: str, db = session):
+    db_user = get_user(username, db)
 
     return db_user
+
+# GET BOOK TITLES by USER
+@user_router.get("/{user_id}", status_code=200)
+async def get_titles_by_user(user_id: int, db = session):
+    user_titles = get_user_titles(user_id, db)
+    return user_titles
 
 # CREATE NEW USER Router
 @user_router.post("/signup", status_code=201, response_model=UserResponse)
@@ -50,7 +63,7 @@ async def create_user(new_user: UserCreate, db = session):
 
 # UPDATE USER Route
 @user_router.put("/update/{user_id}", status_code=200, response_model=UserResponse)
-async def update_user(user_id: int, user: Annotated[UserCreate, Depends(get_current_active_user)], updated_user: UserRequest, db = session):
+async def update_user(user_id: int, updated_user: UserRequest, db = session):
     db_user = get_user(user_id, db)
     if not db_user:
         user_not_found()
@@ -63,7 +76,7 @@ async def update_user(user_id: int, user: Annotated[UserCreate, Depends(get_curr
 
 # DELETE USER Route
 @user_router.delete("/delete/{user_id}", status_code=200)
-async def delete_user(user_id: int, user: Annotated[UserCreate, Depends(get_current_active_user)], db = session):
+async def delete_user(user_id: int, db = session):
     db_user = get_user(user_id, db)
     if not db_user:
         user_not_found()
