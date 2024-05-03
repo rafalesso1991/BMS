@@ -1,0 +1,13 @@
+{
+    "users" : [{
+        "username": "logan",
+        "email": "wolverine@marvel.com",
+        "active": false,
+        "password": "1mcanadian"
+    }, {
+        "username": "wadewilson",
+        "email": "deadpool@marvel.com",
+        "active": false,
+        "password": "chimichangas4life"
+    }]
+}

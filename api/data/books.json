@@ -1,0 +1,51 @@
+{
+    "books" : [{
+        "title":"Dracula",
+        "description":"author: Bram Stoker, genre: Terror, year: 1935",
+        "owner": 2
+    }, {
+        "title":"Frankenstein",
+        "description":"author: Mary Shelley, genre: Terror, year: 1818",
+        "owner": 2
+    }, {
+        "title":"Pride & Prejudice",
+        "description":"author: Jane Austen, genre: Rose Novel, year: 1813",
+        "owner": 1
+    }, {
+        "title":"Mailman",
+        "description":"author: Charles Bukowski, genre: Novel, year: 1971",
+        "owner": 1
+    }, {
+        "title":"Women",
+        "description":"author: Charles Bukowski, genre: Novel, year: 1978",
+        "owner": 1
+    }, {
+        "title":"Robinson Crusoe",
+        "description":"author: Daniel Defoe, genre: Novel, year: 1719",
+        "owner": 2
+    }, {
+        "title":"Moby Dick",
+        "description":"author: Herman Melville, genre: Adventure, year: 1851",
+        "owner": 1
+    }, {
+        "title":"Foundation",
+        "description":"author: Isaac Asimov, genre: Science Fiction, year: 1951",
+        "owner": 2
+    }, {
+        "title":"Don Quixote",
+        "description":"author: Miguel de Cervantes, genre: Novel, year: 1605",
+        "owner": 1
+    }, {
+        "title":"1984",
+        "description":"author: George Orwell, genre: Science Fiction, year: 1949",
+        "owner": 2
+    }, {
+        "title":"Crime & Punishment",
+        "description":"author: Fiódor Dostoyevski, genre: Novel, year: 1866",
+        "owner": 1
+    }, {
+        "title":"The Lord of the Rings",
+        "description":"author: J. R. R. Tolkien, genre: Fantasy, year: 1954",
+        "owner": 2
+    }]
+}
