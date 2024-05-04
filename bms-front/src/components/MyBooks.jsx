@@ -3,8 +3,8 @@ import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import {AuthContext} from '../App';
 
-const UsersData = () => {
-  const [usersData, setUsersData] = useState([]);
+const BooksData = () => {
+  const [booksData, setBooksData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const context = useContext(AuthContext);
@@ -12,15 +12,15 @@ const UsersData = () => {
   const fetchData = async () => {
     setIsLoading(true);
     setError(null);
-  
-    
+
+
     try {
       const response = await axios({
         method: 'GET',
-        url: 'http://localhost:8000/users/',
-        headers: {'Authorization': 'Bearer ' + context.token},
-        });
-      setUsersData(response.data);
+        url: 'http://localhost:8000/books/my_books',
+        headers: {'Authorization': 'Bearer ' + context.token}
+      });
+      setBooksData(response.data);
     } catch (err) {
       setError(err);
     } finally {
@@ -33,15 +33,15 @@ const UsersData = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading users data...</div>;
+    return <div>Loading books data...</div>;
   }
 
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-  if (!usersData) {
-    return <div>No users data found.</div>;
+  if (!booksData) {
+    return <div>No books data found.</div>;
   }
 
   // Display fetched JSON data here (replace with your desired formatting)
@@ -49,22 +49,22 @@ const UsersData = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
       <div>
         <TableContainer component={Paper}>
-          <Table aria-label="users table">
+          <Table aria-label="books table">
             <TableHead>
               <TableRow>
-                <TableCell style={{ backgroundColor: '#FF0000', color: '#FFFFFF', fontWeight: 'bold' }}>ID</TableCell>
-                <TableCell style={{ backgroundColor: '#FF0000', color: '#FFFFFF', fontWeight: 'bold' }}>Username</TableCell>
-                <TableCell style={{ backgroundColor: '#FF0000', color: '#FFFFFF', fontWeight: 'bold' }}>Email</TableCell>
-                {/* Add more table headers for other fields if needed */}
+                <TableCell style={{ backgroundColor: '#008000', color: '#FFFFFF', fontWeight: 'bold' }}>ID</TableCell>
+                <TableCell style={{ backgroundColor: '#008000', color: '#FFFFFF', fontWeight: 'bold' }}>Title</TableCell>
+                <TableCell style={{ backgroundColor: '#008000', color: '#FFFFFF', fontWeight: 'bold' }}>Description</TableCell>
+                <TableCell style={{ backgroundColor: '#008000', color: '#FFFFFF', fontWeight: 'bold' }}>owner</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {usersData.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.id}</TableCell>
-                  <TableCell>{user.username}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  {/* Add more table cells for other fields if needed */}
+              {booksData.map((book) => (
+                <TableRow key={book.id}>
+                  <TableCell>{book.id}</TableCell>
+                  <TableCell>{book.title}</TableCell>
+                  <TableCell>{book.description}</TableCell>
+                  <TableCell>{book.owner}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -75,4 +75,4 @@ const UsersData = () => {
   );
 };
 
-export default UsersData;
+export default BooksData;

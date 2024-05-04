@@ -1,19 +1,48 @@
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
-import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
+import { AuthContext } from '../App';
 
-const LoginButton = () => {
-  const { isAuthenticated, login } = useContext(AuthContext);
+
+//const AuthContext = createContext();
+
+export const LoginButton = () => {
+
+  const context = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+
+
+  const login = async (username, password) => {
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: 'http://localhost:8000/auth/token',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: new URLSearchParams({ 'username': username, 'password': password }).toString()
+      });
+      if (response.data.success) {
+        //setIsAuthenticated(true);
+        context.setToken(response.data.access_token)
+
+      } else {
+        console.error('Login failed:', response);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
 
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     setError(null); // Clear error on close
   };
+
 
   const handleLogin = async () => {
     setError(null); // Clear error before attempting login
@@ -25,12 +54,12 @@ const LoginButton = () => {
     }
   };
 
-  if (isAuthenticated) {
+  if (false) {
     return <Button variant="contained" color="primary">Profile</Button>;
   }
 
   return (
-    <>
+    <AuthContext.Provider value="hola">
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Login
       </Button>
@@ -63,7 +92,7 @@ const LoginButton = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </AuthContext.Provider>
   );
 };
 

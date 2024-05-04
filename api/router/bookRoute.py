@@ -5,6 +5,7 @@ from typing import Annotated, List
 from schema.bookSchema import BookRequest, BookResponse
 from auth.token import check_token
 from query.bookQuery import get_all_books, get_owned_books, get_book
+from query.userQuery import get_user
 from handler.bookHandler import duplicated_title, book_not_found
 from model.bookModel import Book
 
@@ -22,9 +23,10 @@ async def get_books(token: Annotated[str, Depends(check_token)], db = session):
     return db_books
 
 # GET OWNED BOOKS
-@book_router.get("/by_user/{user_id}", status_code = status.HTTP_200_OK)
-async def get_books_by_owner(user_id: int, token: Annotated[str, Depends(check_token)], db = session):
-    user_books = get_owned_books(user_id, db)
+@book_router.get("/my_books", status_code = status.HTTP_200_OK)
+async def get_books_by_owner(user: Annotated[str, Depends(check_token)], db = session):
+    db_user = get_user(user, db)
+    user_books = get_owned_books(db_user.id, db)
 
     return user_books
 

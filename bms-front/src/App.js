@@ -1,21 +1,29 @@
-import ReactDOM from "react-dom/client";
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import './App.css';
 import { AppRouter } from "./AppRouter";
-import { AuthProvider } from "./context/AuthContext";
+//import ReactDOM from "react-dom/client";
+import React from 'react';
+import './App.css';
 
-function App() {
+
+export const AuthContext = React.createContext();
+
+
+export function App() {
+
+  const [token, setToken] = React.useState(null);
+  //const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const value = {'token': token, 'setToken': setToken}
+  console.log(token)
   return (
-    <AuthProvider>      
+    <AuthContext.Provider value={value}>      
       <BrowserRouter>
         <AppRouter />
       </BrowserRouter>
-    </AuthProvider>
+    </AuthContext.Provider>
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+// root.render(<App />);
 
-export default App;

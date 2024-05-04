@@ -32,3 +32,4 @@ def check_token(token : Annotated[str, Depends(oauth2_bearer)]):
     except JWTError:
         raise credentials_exception
     
+    return username

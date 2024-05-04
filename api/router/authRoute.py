@@ -17,9 +17,6 @@ auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 
 session: sessionmaker = Depends(get_db)
 
-import logging
-
-logger = logging.getLogger('foo-logger')
 
 # AUTHENTICATE CREDENTIALS
 def authenticate_user(username, password, db):
@@ -30,40 +27,7 @@ def authenticate_user(username, password, db):
         raise credentials_exception
     return user
 
-# Comprobar q el usuario q nos mando el token existe
-def get_current_user(token: Annotated[str, Depends(oauth2_bearer)], db = session):
-    try:
-        token_decode = jwt.decode(token, key=SECRET_KEY, algorithms=ALGORITHM)
-        username = token_decode.get("sub")
-        if username == None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    
-    user = get_user(username, db)
-    if not user:
-        raise credentials_exception
-    return user
 
-# Garantizar q nuestro token de usuario no haya expirado
-def get_current_active_user(user: UserCreate = Depends(get_current_user)):
-    if user.active:
-        raise inactive_user
-    return user
-
-@auth_router.get("/current_user", status_code=200, response_model=UserResponse)
-async def get_current_user(username: str, user: Annotated[UserCreate, Depends(get_current_active_user)], db = session):
-    if not user:
-        raise inactive_user
-    db_user = get_user(username, db)
-
-    return db_user
-
-@auth_router.get("/myProfile", response_model=UserResponse)
-async def user(user: Annotated[UserCreate, Depends(get_current_active_user)], db = session):
-    user_data = get_user(user.username, db)
-
-    return user_data
 
 # Los datos p / la autentización tienen q pasar 1ro x la ruta 'token'
 @auth_router.post("/token")
