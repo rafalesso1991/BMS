@@ -1,5 +1,5 @@
-from model.bookModel import Book
-from model.userModel import User
+from model.book_model import Book
+from model.user_model import User
 
 # GET BOOK
 def get_book(book_title: str, db):

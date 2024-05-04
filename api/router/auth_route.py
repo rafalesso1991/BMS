@@ -3,20 +3,16 @@ from sqlalchemy.orm import sessionmaker
 from config.db import get_db
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
-from auth.token import SECRET_KEY
-from auth.hash import ALGORITHM, verify_hashed_password
-from auth.token import create_token, oauth2_bearer
-from schema.userSchema import UserCreate, UserResponse
-from jose import jwt, JWTError
-from query.userQuery import get_user
+from auth.hash import verify_hashed_password
+from auth.token import create_token
+from query.user_query import get_user
 from typing import Annotated
-from handler.authHandler import credentials_exception, inactive_user
+from util.exceptions import credentials_exception
 
 # AUTORIZATHION ROUTER
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 
 session: sessionmaker = Depends(get_db)
-
 
 # AUTHENTICATE CREDENTIALS
 def authenticate_user(username, password, db):
@@ -26,8 +22,6 @@ def authenticate_user(username, password, db):
     if not verify_hashed_password(password, user.hashed_password):
         raise credentials_exception
     return user
-
-
 
 # Los datos p / la autentización tienen q pasar 1ro x la ruta 'token'
 @auth_router.post("/token")

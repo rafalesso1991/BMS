@@ -4,7 +4,7 @@ from typing import Union, Annotated
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from .hash import ALGORITHM
-from handler.authHandler import credentials_exception
+from util.exceptions import credentials_exception
 
 # PASSWORD BEARER
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token") # Ruta del Formulario de Login

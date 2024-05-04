@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from config.db import Base, engine
-from router.authRoute import auth_router
-from router.bookRoute import book_router
-from router.userRoute import user_router
+from router.auth_route import auth_router
+from router.book_route import book_router
+from router.user_route import user_router
 import uvicorn
 
 # CREATE TABLES if they dont exists

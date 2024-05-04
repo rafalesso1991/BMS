@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import sessionmaker
 from config.db import get_db
-from typing import Annotated, List
-from schema.bookSchema import BookRequest, BookResponse
+from typing import Annotated
+from schema.book_schema import BookRequest, BookResponse
 from auth.token import check_token
-from query.bookQuery import get_all_books, get_owned_books, get_book
-from query.userQuery import get_user
-from handler.bookHandler import duplicated_title, book_not_found
-from model.bookModel import Book
+from query.book_query import get_all_books, get_owned_books, get_book
+from query.user_query import get_user
+from util.exceptions import book_not_found_exception
+from model.book_model import Book
 
 # BOOK ROUTER
 book_router = APIRouter(prefix = "/books", tags = ["Books"])
@@ -36,10 +36,6 @@ async def create_book(new_book: BookRequest, token: Annotated[str, Depends(check
     db_book = Book(title = new_book.title,
                    description = new_book.description,
                    owner = new_book.owner)
-    db_books = get_all_books(db)
-    for book in db_books:
-        if new_book.title == book.title:
-            raise duplicated_title
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
@@ -51,7 +47,7 @@ async def create_book(new_book: BookRequest, token: Annotated[str, Depends(check
 async def update_book(book_title: str, token: Annotated[str, Depends(check_token)], updated_book: BookRequest, db = session):
     db_book = get_book(book_title, db)
     if not db_book:
-        raise book_not_found
+        raise book_not_found_exception
     db_book.title = updated_book.title
     db_book.description = updated_book.description
     db.commit()
@@ -64,7 +60,7 @@ async def update_book(book_title: str, token: Annotated[str, Depends(check_token
 async def delete_title(book_title: str, token: Annotated[str, Depends(check_token)], db = session):
     db_book = get_book(book_title, db)
     if not db_book:
-        raise book_not_found
+        raise book_not_found_exception
     db.delete(db_book)
     db.commit()
 

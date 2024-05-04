@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import sessionmaker
 from config.db import get_db
 from typing import Annotated, List
-from schema.userSchema import UserRequest, UserResponse, UserCreate
+from schema.user_schema import UserRequest, UserResponse, UserCreate
 from auth.token import check_token
-from query.userQuery import get_all_users, get_user
-from model.userModel import User
+from query.user_query import get_all_users, get_user
+from model.user_model import User
 from auth.hash import generate_hash
-from handler.userHandler import duplicated_username, duplicated_email, user_not_found
+from util.exceptions import user_not_found_exception, duplicated_username_exception, duplicated_email_exception
 
 # USER ROUTER
 user_router = APIRouter(prefix = "/users", tags = ["Users"])
@@ -31,9 +31,9 @@ async def create_user(new_user: UserCreate, db = session):
     db_users = get_all_users(db)
     for user in db_users:
         if new_user.username == user.username:
-            raise duplicated_username
+            raise duplicated_username_exception
         if new_user.email == user.email:
-            raise duplicated_email
+            raise duplicated_email_exception
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -47,7 +47,7 @@ async def create_user(new_user: UserCreate, db = session):
 async def update_user(user_id: int, token: Annotated[str, Depends(check_token)], updated_user: UserRequest, db = session):
     db_user = get_user(user_id, db)
     if not db_user:
-        user_not_found()
+        user_not_found_exception
     db_user.username = updated_user.username
     db_user.email = updated_user.email
     db.commit()
@@ -60,7 +60,7 @@ async def update_user(user_id: int, token: Annotated[str, Depends(check_token)],
 async def delete_user(user_id: int, token: Annotated[str, Depends(check_token)], db = session):
     db_user = get_user(user_id, db)
     if not db_user:
-        user_not_found()
+        user_not_found_exception
     db.delete(db_user)
     db.commit()
 

@@ -1,4 +1,4 @@
-from model.userModel import User
+from model.user_model import User
 
 # GET USER FUNCTION
 def get_user(username: str, db):
