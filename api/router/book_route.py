@@ -32,15 +32,18 @@ async def get_books_by_owner(user: Annotated[str, Depends(check_token)], db = se
 
 # CREATE BOOK
 @book_router.post("/new_book", status_code = status.HTTP_201_CREATED, response_model=BookResponse)
-async def create_book(new_book: BookRequest, token: Annotated[str, Depends(check_token)], db = session):
-    db_book = Book(title = new_book.title,
-                   description = new_book.description,
-                   owner = new_book.owner)
+async def create_book(new_book: BookRequest, user: Annotated[str, Depends(check_token)], db = session):
+    db_user = get_user(user, db)
+    book_data = new_book.dict()  # Convert request to dict
+    book_data["owner"] = db_user.id
+    db_book = Book(**book_data)
+    #db_book = Book(title = new_book.title, description = new_book.description)
+                   #owner = new_book["owner"] = db_user.id )
+    
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
-
-    return db_book
+    return BookResponse(id=db_book.id, **book_data)
 
 # UPDATE BOOK
 @book_router.put("/update/{book_title}", status_code = status.HTTP_200_OK, response_model=BookResponse)
