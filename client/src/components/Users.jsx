@@ -1,35 +1,42 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import {AuthContext} from '../App';
+import useAuth from "../hooks/useAuth";
 
 const UsersData = () => {
-  const [usersData, setUsersData] = useState([]);
+
+  const { token } = useAuth();
+  const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const context = useContext(AuthContext);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    setError(null);
-  
-    
-    try {
-      const response = await axios({
-        method: 'GET',
-        url: 'http://localhost:8000/users/',
-        headers: {'Authorization': 'Bearer ' + context.token},
-        });
-      setUsersData(response.data);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchData();
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getUsers = async () => {
+      try {
+        const response = await axios({
+          method: 'GET',
+          url: 'http://localhost:8000/users/',
+          headers: {'Authorization': 'Bearer ' + token},
+          });
+        setUsers(response.data);
+        console.log(response.data);
+        isMounted && setUsers(response.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    getUsers();
+
+    return () => {
+        isMounted = false;
+        controller.abort();
+    }
   }, []);
 
   if (isLoading) {
@@ -40,12 +47,12 @@ const UsersData = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  if (!usersData) {
+  if (!users) {
     return <div>No users data found.</div>;
   }
 
-  // Display fetched JSON data here (replace with your desired formatting)
   return (
+
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
       <div>
         <TableContainer component={Paper}>
@@ -55,16 +62,14 @@ const UsersData = () => {
                 <TableCell style={{ backgroundColor: '#FF0000', color: '#FFFFFF', fontWeight: 'bold' }}>ID</TableCell>
                 <TableCell style={{ backgroundColor: '#FF0000', color: '#FFFFFF', fontWeight: 'bold' }}>Username</TableCell>
                 <TableCell style={{ backgroundColor: '#FF0000', color: '#FFFFFF', fontWeight: 'bold' }}>Email</TableCell>
-                {/* Add more table headers for other fields if needed */}
               </TableRow>
             </TableHead>
             <TableBody>
-              {usersData.map((user) => (
+              {users.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>{user.id}</TableCell>
                   <TableCell>{user.username}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  {/* Add more table cells for other fields if needed */}
                 </TableRow>
               ))}
             </TableBody>
@@ -72,7 +77,9 @@ const UsersData = () => {
         </TableContainer>
       </div>
     </div>
+
   );
+
 };
 
 export default UsersData;

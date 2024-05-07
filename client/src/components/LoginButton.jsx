@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
 import axios from 'axios';
-import { AuthContext } from '../App';
-
+import useAuth from "../hooks/useAuth";
+import { AuthProvider } from './context/AuthContext';
 
 //const AuthContext = createContext();
 
 export const LoginButton = () => {
 
-  const context = useContext(AuthContext);
+  const auth = useAuth();
   const [open, setOpen] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -27,7 +27,7 @@ export const LoginButton = () => {
       });
       if (response.data.success) {
         //setIsAuthenticated(true);
-        context.setToken(response.data.access_token)
+        auth.setToken(response.data.access_token)
 
       } else {
         console.error('Login failed:', response);
@@ -59,7 +59,7 @@ export const LoginButton = () => {
   }
 
   return (
-    <AuthContext.Provider value="hola">
+    <AuthProvider value="hola">
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Login
       </Button>
@@ -92,7 +92,7 @@ export const LoginButton = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 };
 

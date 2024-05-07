@@ -1,35 +1,42 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import {AuthContext} from '../App';
+import useAuth from "../hooks/useAuth";
 
 const BooksData = () => {
-  const [booksData, setBooksData] = useState([]);
+
+  const { token } = useAuth();
+  const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const context = useContext(AuthContext);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    setError(null);
-
-
-    try {
-      const response = await axios({
-        method: 'GET',
-        url: 'http://localhost:8000/books/',
-        headers: {'Authorization': 'Bearer ' + context.token}
-      });
-      setBooksData(response.data);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchData();
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getBooks = async () => {
+      try {
+        const response = await axios({
+          method: 'GET',
+          url: 'http://localhost:8000/books/',
+          headers: {'Authorization': 'Bearer ' + token}
+        });
+        setBooks(response.data);
+        console.log(response.data);
+        isMounted && setBooks(response.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    getBooks();
+
+    return () => {
+      isMounted = false
+      controller.abort();
+    }
   }, []);
 
   if (isLoading) {
@@ -40,11 +47,10 @@ const BooksData = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  if (!booksData) {
+  if (!books) {
     return <div>No books data found.</div>;
   }
 
-  // Display fetched JSON data here (replace with your desired formatting)
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
       <div>
@@ -59,7 +65,7 @@ const BooksData = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {booksData.map((book) => (
+              {books.map((book) => (
                 <TableRow key={book.id}>
                   <TableCell>{book.id}</TableCell>
                   <TableCell>{book.title}</TableCell>
