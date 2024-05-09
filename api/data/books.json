@@ -1,51 +1,42 @@
 {
     "books" : [{
         "title":"Dracula",
-        "description":"author: Bram Stoker, genre: Terror, year: 1935",
-        "owner": 2
+        "description":"author: Bram Stoker, genre: Terror, year: 1935"
     }, {
         "title":"Frankenstein",
-        "description":"author: Mary Shelley, genre: Terror, year: 1818",
-        "owner": 2
+        "description":"author: Mary Shelley, genre: Terror, year: 1818"
     }, {
         "title":"Pride & Prejudice",
-        "description":"author: Jane Austen, genre: Rose Novel, year: 1813",
-        "owner": 1
+        "description":"author: Jane Austen, genre: Rose Novel, year: 1813"
     }, {
         "title":"Mailman",
-        "description":"author: Charles Bukowski, genre: Novel, year: 1971",
-        "owner": 1
+        "description":"author: Charles Bukowski, genre: Novel, year: 1971"
     }, {
         "title":"Women",
-        "description":"author: Charles Bukowski, genre: Novel, year: 1978",
-        "owner": 1
+        "description":"author: Charles Bukowski, genre: Novel, year: 1978"
     }, {
         "title":"Robinson Crusoe",
-        "description":"author: Daniel Defoe, genre: Novel, year: 1719",
-        "owner": 2
+        "description":"author: Daniel Defoe, genre: Novel, year: 1719"
     }, {
         "title":"Moby Dick",
-        "description":"author: Herman Melville, genre: Adventure, year: 1851",
-        "owner": 1
+        "description":"author: Herman Melville, genre: Adventure, year: 1851"
     }, {
         "title":"Foundation",
-        "description":"author: Isaac Asimov, genre: Science Fiction, year: 1951",
-        "owner": 2
+        "description":"author: Isaac Asimov, genre: Science Fiction, year: 1951"
     }, {
         "title":"Don Quixote",
-        "description":"author: Miguel de Cervantes, genre: Novel, year: 1605",
-        "owner": 1
+        "description":"author: Miguel de Cervantes, genre: Novel, year: 1605"
     }, {
         "title":"1984",
-        "description":"author: George Orwell, genre: Science Fiction, year: 1949",
-        "owner": 2
+        "description":"author: George Orwell, genre: Science Fiction, year: 1949"
     }, {
         "title":"Crime & Punishment",
-        "description":"author: Fiódor Dostoyevski, genre: Novel, year: 1866",
-        "owner": 1
+        "description":"author: Fiódor Dostoyevski, genre: Novel, year: 1866"
     }, {
         "title":"The Lord of the Rings",
-        "description":"author: J. R. R. Tolkien, genre: Fantasy, year: 1954",
-        "owner": 2
+        "description":"author: J. R. R. Tolkien, genre: Fantasy, year: 1954"
+    }, {
+        "title":"A Confederacy of Dunces",
+        "description":"author: John Kennedy Toole, genre: Novel, year: 1980"
     }]
 }

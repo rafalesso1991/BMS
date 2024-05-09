@@ -36,19 +36,16 @@ async def create_book(new_book: BookRequest, user: Annotated[str, Depends(check_
     db_user = get_user(user, db)
     book_data = new_book.dict()  # Convert request to dict
     book_data["owner"] = db_user.id
-    db_book = Book(**book_data)
-    #db_book = Book(title = new_book.title, description = new_book.description)
-                   #owner = new_book["owner"] = db_user.id )
-    
+    db_book = Book(**book_data)    
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
     return BookResponse(id=db_book.id, **book_data)
 
 # UPDATE BOOK
-@book_router.put("/update/{book_title}", status_code = status.HTTP_200_OK, response_model=BookResponse)
-async def update_book(book_title: str, token: Annotated[str, Depends(check_token)], updated_book: BookRequest, db = session):
-    db_book = get_book(book_title, db)
+@book_router.put("/update/{book_id}", status_code = status.HTTP_200_OK, response_model=BookResponse)
+async def update_book(book_id: int, updated_book: BookRequest, db = session):
+    db_book = get_book(book_id, db)
     if not db_book:
         raise book_not_found_exception
     db_book.title = updated_book.title
@@ -59,9 +56,9 @@ async def update_book(book_title: str, token: Annotated[str, Depends(check_token
     return db_book
 
 # DELETE BOOK
-@book_router.delete("/delete/{book_title}", status_code = status.HTTP_200_OK)
-async def delete_title(book_title: str, token: Annotated[str, Depends(check_token)], db = session):
-    db_book = get_book(book_title, db)
+@book_router.delete("/delete/{book_id}", status_code = status.HTTP_200_OK)
+async def delete_title(book_id: int, db = session):
+    db_book = get_book(book_id, db)
     if not db_book:
         raise book_not_found_exception
     db.delete(db_book)

@@ -37,7 +37,7 @@ const UsersData = () => {
         isMounted = false;
         controller.abort();
     }
-  }, []);
+  }, [token]);
 
   if (isLoading) {
     return <div>Loading users data...</div>;

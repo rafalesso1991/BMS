@@ -1,110 +1,69 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import useAuth from '../hooks/useAuth';
+import { Button, Modal, TextField }  from '@mui/material';
 import axios from 'axios';
-import { Button, TextField }  from '@mui/material';
 
-// COMPONENT
 export const LoginBtn = () => {
-
-  const { setAuth, setToken } = useAuth();
-  const [user, setUser] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errMsg, setErrMsg] = useState('');
+  const { auth, setAuth, setToken } = useAuth();
 
-  const userRef = useRef();
-  const errRef = useRef();
-
-
-  useEffect(() => {
-      userRef.current.focus();
-  }, [])
-
-  useEffect(() => {
-    setErrMsg('');
-  }, [user, password, ])
-
-
-  useEffect(() => {
-
-    const storedUser = localStorage.getItem('authUser');
-
-    if (storedUser) {
-      setAuth({ user });
-    }
-
-  }, []); // Empty Dependency Array to RUN ONLY on Initial Render
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-
       const response = await axios({
         method: 'POST',
         url: 'http://localhost:8000/auth/token',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        data: new URLSearchParams({ 'username': user, 'password': password }).toString()
+        data: new URLSearchParams({ 'username': username, 'password': password }).toString()
       });
       const accessToken = response?.data?.access_token;
       if (response.data.success) {
         setToken(response.data.access_token)
-        setAuth({ user, password, accessToken });
-        setUser('');
+        setAuth({ username, password, accessToken });
+        setUsername('');
         setPassword('');
-        localStorage.setItem('authUser', user); // Store username for persistence
-        setErrMsg('');
+        handleClose();
       } else {
-        setErrMsg('Invalid username or password');
+        console.error('Invalid email or password');
       }
-    } catch (err) {
-      if (!err?.response) {
-          setErrMsg('No Server Response');
-      } else if (err.response?.status === 400) {
-          setErrMsg('Missing Username or Password');
-      } else if (err.response?.status === 401) {
-          setErrMsg('Unauthorized');
-      } else {
-          setErrMsg('Login Failed');
-      }
-      errRef.current.focus();
-  }
+    } catch (error) {
+      console.error(error);
+    }
 
   };
 
-  /*const handleLogout = () => {
+  const handleLogout = () => {
     setAuth(false);
     localStorage.removeItem('authUser');
-    setUser('');
+    setUsername('');
     setPassword('');
-  };*/
+  };
+
+  const buttonText = auth ? 'Logout' : 'Login';
 
   return (
-    <div>
-
-{/*
-
-        <>
-          <Button variant = "contained" color = "error" onClick = { handleLogout }>
-            Logout
-          </Button>
-          <p>Welcome: { user }</p>
-        </>
-
-  */}
-
-        <>
-          <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+    <>
+      <Button variant = "contained" color = "primary" onClick = { auth ? handleLogout : handleOpen }>
+        { buttonText }
+      </Button>
+      <Modal open = { isOpen } onClose = { handleClose }>
+        <div style={{ display: 'flex', flexDirection: 'column', padding: 20 }}>
           <TextField
             type = "text"
             id = "username"
-            ref = { userRef }
             label = "Username"
             autoComplete="off"
             variant = "outlined"
-            value = { user }
-            onChange = { (e) => setUser(e.target.value) }
+            value = { username }
+            onChange = { (e) => setUsername(e.target.value) }
             required
           />
           <TextField
@@ -116,18 +75,13 @@ export const LoginBtn = () => {
             onChange = { (e) => setPassword(e.target.value) }
             required
           />
-          <Button variant="contained" onClick = { handleLogin }>
-            Login
+          <Button variant="contained" color="primary" onClick = { handleLogin }>
+            Submit
           </Button>
-          {errMsg && <p style={{ color: 'red' }}>{errMsg}</p>}
-        </>
-
-
-
-    </div>
+        </div>
+      </Modal>
+    </>
   );
-
 };
 
-// EXPORT
 export default LoginBtn;
