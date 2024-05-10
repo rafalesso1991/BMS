@@ -32,11 +32,7 @@ const BooksData = () => {
     const controller = new AbortController();
 
     const handleGet = async() => {
-      await axios({
-        method: 'GET',
-        url: 'http://localhost:8000/books/my_books/',
-        headers: {'Authorization': 'Bearer ' + token}
-      })
+      await axios.get('http://localhost:8000/books/my_books/', { headers: { 'Authorization': 'Bearer ' + token } })
       .then(response => {
         isMounted && setBooks(response.data);
       })
@@ -50,7 +46,7 @@ const BooksData = () => {
   }, [token]);
   // Handle "POST" Requests
   const handlePost = async() => {
-    await axios.post('http://localhost:8000/books/new_book/', bookSelected)
+    await axios.post('http://localhost:8000/books/new_book/', { headers: { 'Authorization': 'Bearer ' + token } }, bookSelected, { headers: { 'Authorization': 'Bearer ' + token } })
     .then(response => {
       setBooks(books.concat(response.data))
       openCloseModalCreate()
@@ -58,7 +54,7 @@ const BooksData = () => {
   }
   // Handle "PUT" Requests
   const handlePut = async() => {
-    await axios.put(`http://localhost:8000/books/update/${bookSelected.id}`, bookSelected)
+    await axios.put(`http://localhost:8000/books/update/${bookSelected.id}`, { headers: { 'Authorization': 'Bearer ' + token } }, bookSelected)
     .then(response => {
       let newData = books;
       newData.map(book => {
@@ -74,7 +70,7 @@ const BooksData = () => {
   }
   // Handle "DELETE" Requests
   const handleDelete = async () => {
-    await axios.delete(`http://localhost:8000/books/delete/${bookSelected.id}`)
+    await axios.delete(`http://localhost:8000/books/delete/${bookSelected.id}`, { headers: { 'Authorization': 'Bearer ' + token } })
     .then(response => {
       const updatedBooks = books.filter((book) => book.id !== bookSelected.id);
       setBooks(updatedBooks);
@@ -147,7 +143,7 @@ const BooksData = () => {
     <div style = {{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
       <div>
       <br />
-        <Button onClic = { () => openCloseModalCreate() }>Add Book</Button>
+        <Button onClick = { () => openCloseModalCreate() }>Add Book</Button>
       <br /><br />
         <TableContainer component = { Paper }>
           <Table aria-label = "books table">
