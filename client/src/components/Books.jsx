@@ -7,8 +7,6 @@ const BooksData = () => {
 
   const { token } = useAuth();
   const [books, setBooks] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const booksPerPage = 10;
 
@@ -17,20 +15,10 @@ const BooksData = () => {
     const controller = new AbortController();
 
     const getBooks = async () => {
-      try {
-        const response = await axios({
-          method: 'GET',
-          url: 'http://localhost:8000/books/',
-          headers: {'Authorization': 'Bearer ' + token}
-        });
-        setBooks(response.data);
-        console.log(response.data);
+      await axios.get('http://localhost:8000/books/', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(response => {
         isMounted && setBooks(response.data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setIsLoading(false);
-      }
+      })
     }
 
     getBooks();
@@ -40,18 +28,6 @@ const BooksData = () => {
       controller.abort();
     }
   }, [token]);
-
-  if (isLoading) {
-    return <div>Loading books data...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!books) {
-    return <div>No books data found.</div>;
-  }
 
   const indexOfLastBook = currentPage * booksPerPage;
   const indexOfFirstBook = indexOfLastBook - booksPerPage;

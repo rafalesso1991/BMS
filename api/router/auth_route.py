@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 from auth.hash import verify_hashed_password
 from auth.token import create_token
-from query.user_query import get_user
+from query.user_query import get_user_by_email
 from typing import Annotated
 from utils import credentials_exception
 
@@ -15,8 +15,8 @@ auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 session: sessionmaker = Depends(get_db)
 
 # AUTHENTICATE CREDENTIALS
-def authenticate_user(username, password, db):
-    user = get_user(username, db)
+def authenticate_user(email, password, db):
+    user = get_user_by_email(email, db)
     if not user:
         raise credentials_exception
     if not verify_hashed_password(password, user.hashed_password):

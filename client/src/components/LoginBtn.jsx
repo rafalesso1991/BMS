@@ -3,17 +3,29 @@ import useAuth from '../hooks/useAuth';
 import { Button, Modal, TextField }  from '@mui/material';
 import axios from 'axios';
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email format
+
 export const LoginBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const { auth, setAuth, setToken } = useAuth();
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
 
+  const validateEmail = (email) => {
+    setErrorMessage(''); // Clear previous error message
+    return EMAIL_REGEX.test(email);
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!validateEmail(email)) {
+      setErrorMessage('Invalid email format');
+      return; // Prevent form submission if email is invalid
+    }
 
     try {
       const response = await axios({
@@ -22,13 +34,13 @@ export const LoginBtn = () => {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        data: new URLSearchParams({ 'username': username, 'password': password }).toString()
+        data: new URLSearchParams({ 'username': email, 'password': password }).toString()
       });
       const accessToken = response?.data?.access_token;
       if (response.data.success) {
         setToken(response.data.access_token)
-        setAuth({ username, password, accessToken });
-        setUsername('');
+        setAuth({ email, password, accessToken });
+        setEmail('');
         setPassword('');
         handleClose();
       } else {
@@ -42,8 +54,7 @@ export const LoginBtn = () => {
 
   const handleLogout = () => {
     setAuth(false);
-    localStorage.removeItem('authUser');
-    setUsername('');
+    setEmail('');
     setPassword('');
   };
 
@@ -63,15 +74,16 @@ export const LoginBtn = () => {
             } }>
         <div style={{ display: 'flex', flexDirection: 'column', padding: 20 }}>
           <TextField
-            type = "text"
-            id = "username"
-            label = "Username"
+            type = "email"
+            id = "email"
+            label = "Email"
             autoComplete="off"
             variant = "outlined"
-            value = { username }
-            onChange = { (e) => setUsername(e.target.value) }
+            value = { email }
+            onChange = { (e) => setEmail(e.target.value) }
             required
           />
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <TextField
             type = "password"
             id = "password"

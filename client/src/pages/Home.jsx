@@ -9,8 +9,8 @@ function Home() {
         <h3>Desarrollo del frontend utilizando react</h3>
         <h4>Objetivo:</h4>
         <p>
-          Desarrollar una aplicación web utilizando React.js que incluya funcionalidades de autenticación, gestión de libros y comunicación con una base de datos a través del backend utilizando <b>Axios</b>. <br/>
-          Se espera que los participantes utilicen <b>Context API</b> para gestionar el estado de autenticación, implementen un <b>sistema de enrutamiento</b> y realicen llamadas al backend para obtener y manipular datos.</p>
+          Desarrollar una <b>aplicación web</b> utilizando <b>React.js</b> que incluya funcionalidades de <b>autenticación</b>, <b>gestión de libros</b> y <b>comunicación con una base de datos</b> a través del backend utilizando <b>Axios</b>. <br/>
+          Se espera que los participantes utilicen <b>Context API</b> para gestionar el <b>estado de autenticación</b>, implementen un <b>sistema de enrutamiento</b> y realicen <b>llamadas al backend</b> para <b>obtener y manipular datos</b>.</p>
         <h4>Rquisitos Funcionales:</h4>
         <h5>1. Página de Inicio:</h5>
         <p>
@@ -28,7 +28,7 @@ function Home() {
         <p>
           Al presionar el botón "Mis Libros", mostrar una tabla paginada con las columnas <b>"Nombre"</b>, <b>"Descripción"</b> y <b>"Acciones"</b>. <br/>
           Listar los libros desde la base de datos, mostrando solo <b>10 libros</b> por página. <br/>
-          Implementar paginación para navegar entre las distintas páginas de libros. <br/>
+          Implementar <b>paginación</b> para navegar entre las distintas páginas de libros. <br/>
         </p>
         <h5>4. Agregar Libro:</h5>
         <p>

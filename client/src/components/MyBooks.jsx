@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import useAuth from "../hooks/useAuth";
-import Styles from "../MyBooks.css"
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Modal, TextField } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 
@@ -98,9 +97,9 @@ const BooksData = () => {
   const bodyCreate = (
     <div style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
       <h3>Add New Book</h3>
-      <TextField className = { Styles.input } name = "title" label = "Title" onChange = { handleChange }/>
+      <TextField name = "title" label = "Title" onChange = { handleChange }/>
       <br />
-      <TextField className = { Styles.input } name = "description" label = "Description" onChange = { handleChange }/>
+      <TextField name = "description" label = "Description" onChange = { handleChange }/>
       <br /><br />
       <div align="right">
         <Button onClick = { () => handlePost() } color = "primary">Create</Button>
@@ -112,9 +111,9 @@ const BooksData = () => {
   const bodyUpdate = (
     <div style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
       <h3>Update Book</h3>
-      <TextField className = { Styles.input } name = "title" label = "Title" onChange = { handleChange } value = { bookSelected && bookSelected.title }/>
+      <TextField name = "title" label = "Title" onChange = { handleChange } value = { bookSelected && bookSelected.title }/>
       <br />
-      <TextField className = { Styles.input } name = "description" label = "Description" onChange = { handleChange } value = { bookSelected && bookSelected.description }/>
+      <TextField name = "description" label = "Description" onChange = { handleChange } value = { bookSelected && bookSelected.description }/>
       <br /><br />
       <div align="right">
         <Button onClick = { () => handlePut() } color = "primary">Update</Button>
@@ -163,9 +162,9 @@ const BooksData = () => {
                   <TableCell>{ book.title }</TableCell>
                   <TableCell>{ book.description }</TableCell>
                   <TableCell>
-                    <Edit  className = { Styles.icon } onClick = { () => selectBook(book, 'Update') }/>
+                    <Edit onClick = { () => selectBook(book, 'Update') }/>
                       &nbsp;&nbsp;&nbsp;
-                    <Delete  className = { Styles.icon } onClick = { () => selectBook(book, 'Delete') }/>
+                    <Delete onClick = { () => selectBook(book, 'Delete') }/>
                   </TableCell>
                 </TableRow>
               )) }

@@ -1,34 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import useAuth from "../hooks/useAuth";
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import useAuth from "../hooks/useAuth";
 
 const UsersData = () => {
 
   const { token } = useAuth();
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
 
     const getUsers = async () => {
-      try {
-        const response = await axios({
-          method: 'GET',
-          url: 'http://localhost:8000/users/',
-          headers: {'Authorization': 'Bearer ' + token},
-          });
-        setUsers(response.data);
-        console.log(response.data);
+      await axios.get('http://localhost:8000/users/', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(response => {
         isMounted && setUsers(response.data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setIsLoading(false);
-      }
+      })
     }
 
     getUsers();
@@ -38,18 +26,6 @@ const UsersData = () => {
         controller.abort();
     }
   }, [token]);
-
-  if (isLoading) {
-    return <div>Loading users data...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!users) {
-    return <div>No users data found.</div>;
-  }
 
   return (
 
