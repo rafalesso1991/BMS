@@ -7,7 +7,7 @@ from auth.token import check_token
 from query.user_query import get_all_users, get_user
 from model.user_model import User
 from auth.hash import generate_hash
-from util.exceptions import user_not_found_exception, duplicated_username_exception, duplicated_email_exception
+from utils import user_not_found_exception, duplicated_username_exception, duplicated_email_exception
 
 # USER ROUTER
 user_router = APIRouter(prefix = "/users", tags = ["Users"])
@@ -17,7 +17,7 @@ session: sessionmaker = Depends(get_db)
 
 # GET ALL USERS Router
 @user_router.get("/", status_code = status.HTTP_200_OK)
-async def get_users(token: Annotated[List[UserCreate], Depends(check_token)], db = session):
+async def get_users(db = session): # token: Annotated[List[UserCreate], Depends(check_token)],
     db_users = get_all_users(db)
     return db_users
 

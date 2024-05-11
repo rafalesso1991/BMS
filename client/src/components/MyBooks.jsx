@@ -46,7 +46,7 @@ const BooksData = () => {
   }, [token]);
   // Handle "POST" Requests
   const handlePost = async() => {
-    await axios.post('http://localhost:8000/books/new_book/', { headers: { 'Authorization': 'Bearer ' + token } }, bookSelected, { headers: { 'Authorization': 'Bearer ' + token } })
+    await axios.post('http://localhost:8000/books/new_book/', { headers: { 'Authorization': 'Bearer ' + token } }, bookSelected)
     .then(response => {
       setBooks(books.concat(response.data))
       openCloseModalCreate()
@@ -96,7 +96,7 @@ const BooksData = () => {
   }
   // Body of the Create Modal
   const bodyCreate = (
-    <div className = { Styles.modal }>
+    <div style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
       <h3>Add New Book</h3>
       <TextField className = { Styles.input } name = "title" label = "Title" onChange = { handleChange }/>
       <br />
@@ -110,7 +110,7 @@ const BooksData = () => {
   )
   // Body of the Update Modal
   const bodyUpdate = (
-    <div className = { Styles.modal }>
+    <div style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
       <h3>Update Book</h3>
       <TextField className = { Styles.input } name = "title" label = "Title" onChange = { handleChange } value = { bookSelected && bookSelected.title }/>
       <br />
@@ -124,7 +124,7 @@ const BooksData = () => {
   )
   // Body of the Delete Modal
   const bodyDelete = (
-    <div className = { Styles.modal }>
+    <div style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
       <p>Are you sure you want to delete the book <b>{ bookSelected && bookSelected.title }</b> ? </p>
       <div align="right">
         <Button onClick = { () => handleDelete() } color = "secondary">Yes</Button>
@@ -183,22 +183,38 @@ const BooksData = () => {
           )) }
         </div>
 
-        <Modal
+        <Modal 
           open = { modalCreate }
-          onClose = { openCloseModalCreate }>
+          onClose = { openCloseModalCreate }
+          style = {{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          } }>
             { bodyCreate }
         </Modal>
 
         <Modal
           open = { modalUpdate }
-          onClose = { openCloseModalUpdate }>
+          onClose = { openCloseModalUpdate }
+          style = {{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          } }
+        >
             { bodyUpdate }
         </Modal>
 
         <Modal
-          style = { Styles.modal }
           open = { modalDelete }
-          onClose = { openCloseModalDelete }>
+          onClose = { openCloseModalDelete }
+          style = {{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
             { bodyDelete }
         </Modal>
 
@@ -206,8 +222,8 @@ const BooksData = () => {
 
     </div>
   
-  ); // return
+  );
 
-} // Books Data
+}
 
 export default BooksData;

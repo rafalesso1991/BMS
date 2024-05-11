@@ -1,10 +1,10 @@
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends
-from typing import Union, Annotated
+from typing import Union
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from .hash import ALGORITHM
-from util.exceptions import credentials_exception
+from utils import credentials_exception
 
 # PASSWORD BEARER
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token") # Ruta del Formulario de Login

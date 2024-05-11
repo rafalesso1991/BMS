@@ -5,8 +5,12 @@ import { Outlet } from "react-router-dom";
 const RouterLayout = () => {
     return (
       <>
-        <NavBar />
-        <Outlet />
+        <header>
+          <NavBar />
+        </header>
+        <main>
+          <Outlet />
+        </main>
       </>
     )
   };

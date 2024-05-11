@@ -12,15 +12,14 @@ const NavBar = () => {
     <div>
       <AppBar>
         <Toolbar>
-          <Button component = { Link } to = "/home" color="inherit">Home</Button>
-          <Button component = { Link } to = "/users" color="inherit">Users</Button>
+          <Button component = { Link } to = "/home" color = "inherit">Home</Button>
+          <Button component = { Link } to = "/users" color = "inherit">Users</Button>
           {auth && (
-            <Button component = { Link } to = "/books" color="inherit">Books</Button>
+            <Button component = { Link } to = "/books" color = "inherit">Books</Button>
           )}
           {auth && (
-            <Button component = { Link } to = "/myBooks" color="inherit">MyBooks</Button>
+            <Button component = { Link } to = "/myBooks" color = "inherit">MyBooks</Button>
           )}
-          <Button component = { Link } to = "/stock" color="inherit">Stock</Button>
           <LoginBtn />
           
         </Toolbar>

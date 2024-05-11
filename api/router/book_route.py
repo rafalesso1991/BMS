@@ -6,7 +6,7 @@ from schema.book_schema import BookRequest, BookResponse
 from auth.token import check_token
 from query.book_query import get_all_books, get_owned_books, get_book
 from query.user_query import get_user
-from util.exceptions import book_not_found_exception
+from utils import book_not_found_exception
 from model.book_model import Book
 
 # BOOK ROUTER
@@ -44,7 +44,7 @@ async def create_book(new_book: BookRequest, user: Annotated[str, Depends(check_
 
 # UPDATE BOOK
 @book_router.put("/update/{book_id}", status_code = status.HTTP_200_OK, response_model=BookResponse)
-async def update_book(book_id: int, updated_book: BookRequest, db = session):
+async def update_book(book_id: int, user: Annotated[str, Depends(check_token)], updated_book: BookRequest, db = session):
     db_book = get_book(book_id, db)
     if not db_book:
         raise book_not_found_exception
@@ -57,7 +57,7 @@ async def update_book(book_id: int, updated_book: BookRequest, db = session):
 
 # DELETE BOOK
 @book_router.delete("/delete/{book_id}", status_code = status.HTTP_200_OK)
-async def delete_title(book_id: int, db = session):
+async def delete_title(book_id: int, user: Annotated[str, Depends(check_token)], db = session):
     db_book = get_book(book_id, db)
     if not db_book:
         raise book_not_found_exception

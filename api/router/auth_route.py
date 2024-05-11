@@ -7,7 +7,7 @@ from auth.hash import verify_hashed_password
 from auth.token import create_token
 from query.user_query import get_user
 from typing import Annotated
-from util.exceptions import credentials_exception
+from utils import credentials_exception
 
 # AUTORIZATHION ROUTER
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])

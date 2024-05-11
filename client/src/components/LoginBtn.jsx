@@ -54,7 +54,13 @@ export const LoginBtn = () => {
       <Button variant = "contained" color = "primary" onClick = { auth ? handleLogout : handleOpen }>
         { buttonText }
       </Button>
-      <Modal open = { isOpen } onClose = { handleClose }>
+      <Modal open = { isOpen }
+             onClose = { handleClose }
+             style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            } }>
         <div style={{ display: 'flex', flexDirection: 'column', padding: 20 }}>
           <TextField
             type = "text"

@@ -5,19 +5,16 @@ import Home from "./pages/Home";
 import Users from './components/Users';
 import Books from './components/Books';
 import MyBooks from './components/MyBooks';
-import StockMarketData from './pages/StockMarketData';
 
 export const AppRouter = () => {
 
     return (
     <Routes>
-        <Route path = "/" element = { <RouterLayout /> }>
+        <Route path = "/" element = { <RouterLayout/> }>
             <Route path = "*" element = { <Home /> }/>
             <Route path = "users" element = { <Users /> }/>
             <Route path = "books" element = { <Books /> }/>
             <Route path = "myBooks" element = { <MyBooks /> }/>
-            <Route path = "stock" element = { <StockMarketData /> }/>
-
         </Route>
 
     </Routes>
