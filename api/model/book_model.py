@@ -1,7 +1,7 @@
 from config.db import Base
 from sqlalchemy import Column, Integer, Sequence, String, ForeignKey
 
-# Book Model Table
+# Book Model
 class Book(Base):
     __tablename__ = 'books'
 

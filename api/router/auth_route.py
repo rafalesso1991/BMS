@@ -25,10 +25,7 @@ def authenticate_user(email, password, db):
 
 # Los datos p / la autentización tienen q pasar 1ro x la ruta 'token'
 @auth_router.post("/token")
-async def login(
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db = session
-    ):
-    
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db = session):
     user = authenticate_user(form_data.username, form_data.password, db)
     access_token_expires = timedelta(minutes=15)
     token = create_token({"sub": user.username}, access_token_expires) # "sub" es parte d la implementación d oauth2 p / los sistemas q utilizan jwt
@@ -36,4 +33,4 @@ async def login(
         "access_token": token,
         "token_type": "bearer",
         'success': 'true'
-    } # Keremos q nos retorne el 'token' p / pasarlo a la ruta "/current_user"
+    }

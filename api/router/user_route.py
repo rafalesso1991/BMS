@@ -17,7 +17,7 @@ session: sessionmaker = Depends(get_db)
 
 # GET ALL USERS Router
 @user_router.get("/", status_code = status.HTTP_200_OK)
-async def get_users(db = session): # token: Annotated[List[UserCreate], Depends(check_token)],
+async def get_users(token: Annotated[List[UserCreate], Depends(check_token)], db = session):
     db_users = get_all_users(db)
     return db_users
 

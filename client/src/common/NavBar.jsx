@@ -13,13 +13,9 @@ const NavBar = () => {
       <AppBar>
         <Toolbar>
           <Button component = { Link } to = "/" color = "inherit">Home</Button>
-          <Button component = { Link } to = "/users" color = "inherit">Users</Button>
-          {auth && (
-            <Button component = { Link } to = "/books" color = "inherit">Books</Button>
-          )}
-          {auth && (
-            <Button component = { Link } to = "/myBooks" color = "inherit">My Books</Button>
-          )}
+          {auth && (<Button component = { Link } to = "/users" color = "inherit">Users</Button>)}
+          {auth && (<Button component = { Link } to = "/books" color = "inherit">Books</Button>)}
+          {auth && (<Button component = { Link } to = "/myBooks" color = "inherit">My Books</Button>)}
           <LoginBtn />
           
         </Toolbar>

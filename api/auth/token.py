@@ -8,6 +8,7 @@ from utils import credentials_exception
 
 # PASSWORD BEARER
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token") # Ruta del Formulario de Login
+
 # TOKEN PARAMS 
 SECRET_KEY = "secret"
 

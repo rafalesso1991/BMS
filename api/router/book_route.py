@@ -40,6 +40,7 @@ async def create_book(new_book: BookRequest, user: Annotated[str, Depends(check_
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
+
     return BookResponse(id=db_book.id, **book_data)
 
 # UPDATE BOOK

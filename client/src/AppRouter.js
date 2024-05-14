@@ -13,8 +13,12 @@ export const AppRouter = () => {
     <Routes>
         <Route path = "/" element = { <RouterLayout/> }>
             <Route path = "/" element = { <Home /> }/>
-            <Route path = "users" element = { <Users /> }/>
-            <Route path = "books" element = { <Books /> }/>
+            <Route element = { <PrivateRoute /> }>
+                <Route path = "users" element = { <Users /> }/>
+            </Route>
+            <Route element = { <PrivateRoute /> }>
+                <Route path = "books" element = { <Books /> }/>
+            </Route>
             <Route element = { <PrivateRoute /> }>
                 <Route path = "myBooks" element = { <MyBooks /> }/>
             </Route>
