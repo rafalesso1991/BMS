@@ -16,7 +16,7 @@ export const LoginBtn = () => {
   const handleClose = () => setIsOpen(false);
 
   const validateEmail = (email) => {
-    setErrorMessage(''); // Clear previous error message
+    setErrorMessage('');
     return EMAIL_REGEX.test(email);
   };
 
@@ -24,7 +24,7 @@ export const LoginBtn = () => {
     e.preventDefault();
     if (!validateEmail(email)) {
       setErrorMessage('Invalid email format');
-      return; // Prevent form submission if email is invalid
+      return;
     }
 
     try {
@@ -48,6 +48,7 @@ export const LoginBtn = () => {
       }
     } catch (error) {
       console.error(error);
+      setErrorMessage('Invalid email or password');
     }
 
   };

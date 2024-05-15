@@ -45,7 +45,7 @@ const BooksData = () => {
   }, [token]);
   // Handle "POST" Requests
   const handlePost = async() => {
-    await axios.post('http://localhost:8000/books/new_book/', { headers: { 'Authorization': 'Bearer ' + token } }, bookSelected)
+    await axios.post('http://localhost:8000/books/new_book/', bookSelected, { headers: { 'Authorization': 'Bearer ' + token } })
     .then(response => {
       setBooks(books.concat(response.data))
       openCloseModalCreate()
@@ -53,7 +53,7 @@ const BooksData = () => {
   }
   // Handle "PUT" Requests
   const handlePut = async() => {
-    await axios.put(`http://localhost:8000/books/update/${bookSelected.id}`, { headers: { 'Authorization': 'Bearer ' + token } }, bookSelected)
+    await axios.put(`http://localhost:8000/books/update/${bookSelected.id}`, bookSelected, { headers: { 'Authorization': 'Bearer ' + token } })
     .then(response => {
       let newData = books;
       newData.map(book => {

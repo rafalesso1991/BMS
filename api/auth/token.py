@@ -1,6 +1,6 @@
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends
-from typing import Union
+from typing import Union, Annotated
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from .hash import ALGORITHM
@@ -24,7 +24,7 @@ def create_token(data: dict, time_expire: Union[datetime, None] = None):
     return token_jwt
 
 # CHECK TOKEN
-def check_token(token: str = Depends(oauth2_bearer)):
+def check_token(token : Annotated[str, Depends(oauth2_bearer)]):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")

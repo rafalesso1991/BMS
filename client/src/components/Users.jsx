@@ -10,7 +10,7 @@ const UsersData = () => {
 
   useEffect(() => {
     let isMounted = true;
-    const controller = new AbortController();
+    const controller = new AbortController(); // Clase d JS q se utiliza con useEffect() p / cancelar solicitudes asincrónicas
 
     const getUsers = async () => {
       await axios.get('http://localhost:8000/users/', { headers: { 'Authorization': 'Bearer ' + token } })
